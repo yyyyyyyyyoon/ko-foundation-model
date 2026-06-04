@@ -1,0 +1,1324 @@
+{
+  "comparison_name": "tokenizer_eval_vocab_size_comparison",
+  "models": {
+    "50k": {
+      "tokenizer_dir": "C:\\Users\\dbstj\\dataset\\tokenizer_bpe_50k",
+      "vocab_size": 50000,
+      "max_docs_per_group": 10000,
+      "results": [
+        {
+          "label": "ko",
+          "docs": 5000,
+          "chars": 4431633,
+          "tokens": 1845888,
+          "avg_chars_per_doc": 886.3266,
+          "avg_tokens_per_doc": 369.1776,
+          "avg_token_length_in_chars": 2.4008135921572706,
+          "chars_per_token": 2.4008135921572706,
+          "tokens_per_char": 0.41652546589485184,
+          "unk_count": 0,
+          "unk_ratio": 0.0,
+          "roundtrip_success": 5000,
+          "roundtrip_success_ratio": 1.0,
+          "roundtrip_fail": 0,
+          "roundtrip_fail_ratio": 0.0,
+          "used_vocab": 31494,
+          "used_vocab_ratio": 0.62988,
+          "top_used_tokens": [
+            {
+              "token_id": 25,
+              "token": ".",
+              "count": 56625
+            },
+            {
+              "token_id": 23,
+              "token": ",",
+              "count": 26444
+            },
+            {
+              "token_id": 464,
+              "token": "Ġ'",
+              "count": 21387
+            },
+            {
+              "token_id": 18,
+              "token": "'",
+              "count": 20714
+            },
+            {
+              "token_id": 7,
+              "token": "<NAME>",
+              "count": 18743
+            },
+            {
+              "token_id": 232,
+              "token": "Ġ",
+              "count": 14646
+            },
+            {
+              "token_id": 19,
+              "token": "(",
+              "count": 13229
+            },
+            {
+              "token_id": 20,
+              "token": ")",
+              "count": 12165
+            },
+            {
+              "token_id": 410,
+              "token": "ìĿ¼",
+              "count": 9468
+            },
+            {
+              "token_id": 500,
+              "token": "..",
+              "count": 8933
+            },
+            {
+              "token_id": 322,
+              "token": "ê³ł",
+              "count": 8894
+            },
+            {
+              "token_id": 287,
+              "token": "ìĹĲ",
+              "count": 7767
+            },
+            {
+              "token_id": 281,
+              "token": "ìĿ´",
+              "count": 7449
+            },
+            {
+              "token_id": 295,
+              "token": "ìĿĺ",
+              "count": 7385
+            },
+            {
+              "token_id": 297,
+              "token": "ìĿĦ",
+              "count": 7027
+            },
+            {
+              "token_id": 508,
+              "token": "ĠìŀĪëĭ¤",
+              "count": 6928
+            },
+            {
+              "token_id": 413,
+              "token": "ĠìĪĺ",
+              "count": 6785
+            },
+            {
+              "token_id": 320,
+              "token": "ìĿĢ",
+              "count": 6523
+            },
+            {
+              "token_id": 370,
+              "token": "ëıĦ",
+              "count": 5991
+            },
+            {
+              "token_id": 285,
+              "token": "ëĬĶ",
+              "count": 5502
+            }
+          ],
+          "roundtrip_fail_examples": [],
+          "file_source": "holdout",
+          "files": [
+            "C:\\Users\\dbstj\\dataset\\processed\\ko_aihub_test.jsonl"
+          ]
+        },
+        {
+          "label": "en",
+          "docs": 5000,
+          "chars": 26605401,
+          "tokens": 6289127,
+          "avg_chars_per_doc": 5321.0802,
+          "avg_tokens_per_doc": 1257.8254,
+          "avg_token_length_in_chars": 4.230380623574623,
+          "chars_per_token": 4.230380623574623,
+          "tokens_per_char": 0.23638534897481905,
+          "unk_count": 0,
+          "unk_ratio": 0.0,
+          "roundtrip_success": 5000,
+          "roundtrip_success_ratio": 1.0,
+          "roundtrip_fail": 0,
+          "roundtrip_fail_ratio": 0.0,
+          "used_vocab": 20264,
+          "used_vocab_ratio": 0.40528,
+          "top_used_tokens": [
+            {
+              "token_id": 286,
+              "token": "Ġthe",
+              "count": 272930
+            },
+            {
+              "token_id": 23,
+              "token": ",",
+              "count": 242195
+            },
+            {
+              "token_id": 25,
+              "token": ".",
+              "count": 212278
+            },
+            {
+              "token_id": 319,
+              "token": "Ġof",
+              "count": 144528
+            },
+            {
+              "token_id": 347,
+              "token": "Ġand",
+              "count": 127106
+            },
+            {
+              "token_id": 333,
+              "token": "Ġin",
+              "count": 105138
+            },
+            {
+              "token_id": 371,
+              "token": "Ġto",
+              "count": 93881
+            },
+            {
+              "token_id": 210,
+              "token": "Ċ",
+              "count": 88287
+            },
+            {
+              "token_id": 277,
+              "token": "Ġa",
+              "count": 85532
+            },
+            {
+              "token_id": 471,
+              "token": "Ġwas",
+              "count": 53829
+            },
+            {
+              "token_id": 24,
+              "token": "-",
+              "count": 51170
+            },
+            {
+              "token_id": 450,
+              "token": "Ġ\"",
+              "count": 47806
+            },
+            {
+              "token_id": 524,
+              "token": "Ġis",
+              "count": 36126
+            },
+            {
+              "token_id": 493,
+              "token": "Ġfor",
+              "count": 36124
+            },
+            {
+              "token_id": 536,
+              "token": "Ġas",
+              "count": 35255
+            },
+            {
+              "token_id": 573,
+              "token": "Ġwith",
+              "count": 31943
+            },
+            {
+              "token_id": 538,
+              "token": "Ġon",
+              "count": 31833
+            },
+            {
+              "token_id": 13,
+              "token": "\"",
+              "count": 30516
+            },
+            {
+              "token_id": 607,
+              "token": "Ġby",
+              "count": 30211
+            },
+            {
+              "token_id": 531,
+              "token": "Ġ(",
+              "count": 29565
+            }
+          ],
+          "roundtrip_fail_examples": [],
+          "file_source": "holdout",
+          "files": [
+            "C:\\Users\\dbstj\\dataset\\processed\\enwiki_test.jsonl"
+          ]
+        },
+        {
+          "label": "code",
+          "docs": 2225,
+          "chars": 606929,
+          "tokens": 198985,
+          "avg_chars_per_doc": 272.7770786516854,
+          "avg_tokens_per_doc": 89.43146067415731,
+          "avg_token_length_in_chars": 3.0501243812347663,
+          "chars_per_token": 3.0501243812347663,
+          "tokens_per_char": 0.3278554822722262,
+          "unk_count": 0,
+          "unk_ratio": 0.0,
+          "roundtrip_success": 2225,
+          "roundtrip_success_ratio": 1.0,
+          "roundtrip_fail": 0,
+          "roundtrip_fail_ratio": 0.0,
+          "used_vocab": 6353,
+          "used_vocab_ratio": 0.12706,
+          "top_used_tokens": [
+            {
+              "token_id": 210,
+              "token": "Ċ",
+              "count": 12709
+            },
+            {
+              "token_id": 74,
+              "token": "_",
+              "count": 6761
+            },
+            {
+              "token_id": 25,
+              "token": ".",
+              "count": 5861
+            },
+            {
+              "token_id": 23,
+              "token": ",",
+              "count": 4249
+            },
+            {
+              "token_id": 5701,
+              "token": "ĠĠĠĠĠĠĠ",
+              "count": 4018
+            },
+            {
+              "token_id": 37,
+              "token": ":",
+              "count": 3641
+            },
+            {
+              "token_id": 19,
+              "token": "(",
+              "count": 3288
+            },
+            {
+              "token_id": 3702,
+              "token": "ĠĠĠ",
+              "count": 2266
+            },
+            {
+              "token_id": 41,
+              "token": ">",
+              "count": 2172
+            },
+            {
+              "token_id": 1989,
+              "token": "Ġ=",
+              "count": 2079
+            },
+            {
+              "token_id": 20,
+              "token": ")",
+              "count": 2069
+            },
+            {
+              "token_id": 286,
+              "token": "Ġthe",
+              "count": 1970
+            },
+            {
+              "token_id": 10378,
+              "token": "ĠĠĠĠĠĠĠĠĠĠĠ",
+              "count": 1943
+            },
+            {
+              "token_id": 94,
+              "token": "s",
+              "count": 1400
+            },
+            {
+              "token_id": 40,
+              "token": "=",
+              "count": 1202
+            },
+            {
+              "token_id": 2618,
+              "token": "Ġ:",
+              "count": 1183
+            },
+            {
+              "token_id": 232,
+              "token": "Ġ",
+              "count": 1101
+            },
+            {
+              "token_id": 371,
+              "token": "Ġto",
+              "count": 1033
+            },
+            {
+              "token_id": 14583,
+              "token": "code",
+              "count": 1019
+            },
+            {
+              "token_id": 18603,
+              "token": "ĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠ",
+              "count": 982
+            }
+          ],
+          "roundtrip_fail_examples": [],
+          "file_source": "holdout",
+          "files": [
+            "C:\\Users\\dbstj\\dataset\\processed\\code_test.txt"
+          ]
+        }
+      ]
+    },
+    "64k": {
+      "tokenizer_dir": "C:\\Users\\dbstj\\dataset\\tokenizer_bpe_64k",
+      "vocab_size": 64000,
+      "max_docs_per_group": 10000,
+      "results": [
+        {
+          "label": "ko",
+          "docs": 5000,
+          "chars": 4431633,
+          "tokens": 1790236,
+          "avg_chars_per_doc": 886.3266,
+          "avg_tokens_per_doc": 358.0472,
+          "avg_token_length_in_chars": 2.475446254013437,
+          "chars_per_token": 2.475446254013437,
+          "tokens_per_char": 0.4039675668088942,
+          "unk_count": 0,
+          "unk_ratio": 0.0,
+          "roundtrip_success": 5000,
+          "roundtrip_success_ratio": 1.0,
+          "roundtrip_fail": 0,
+          "roundtrip_fail_ratio": 0.0,
+          "used_vocab": 39171,
+          "used_vocab_ratio": 0.612046875,
+          "top_used_tokens": [
+            {
+              "token_id": 25,
+              "token": ".",
+              "count": 56610
+            },
+            {
+              "token_id": 23,
+              "token": ",",
+              "count": 26444
+            },
+            {
+              "token_id": 464,
+              "token": "Ġ'",
+              "count": 21387
+            },
+            {
+              "token_id": 18,
+              "token": "'",
+              "count": 20661
+            },
+            {
+              "token_id": 7,
+              "token": "<NAME>",
+              "count": 18743
+            },
+            {
+              "token_id": 232,
+              "token": "Ġ",
+              "count": 14626
+            },
+            {
+              "token_id": 19,
+              "token": "(",
+              "count": 13182
+            },
+            {
+              "token_id": 20,
+              "token": ")",
+              "count": 12154
+            },
+            {
+              "token_id": 410,
+              "token": "ìĿ¼",
+              "count": 9318
+            },
+            {
+              "token_id": 500,
+              "token": "..",
+              "count": 8933
+            },
+            {
+              "token_id": 322,
+              "token": "ê³ł",
+              "count": 8470
+            },
+            {
+              "token_id": 508,
+              "token": "ĠìŀĪëĭ¤",
+              "count": 6928
+            },
+            {
+              "token_id": 287,
+              "token": "ìĹĲ",
+              "count": 6737
+            },
+            {
+              "token_id": 295,
+              "token": "ìĿĺ",
+              "count": 6517
+            },
+            {
+              "token_id": 413,
+              "token": "ĠìĪĺ",
+              "count": 6497
+            },
+            {
+              "token_id": 281,
+              "token": "ìĿ´",
+              "count": 6397
+            },
+            {
+              "token_id": 297,
+              "token": "ìĿĦ",
+              "count": 5874
+            },
+            {
+              "token_id": 320,
+              "token": "ìĿĢ",
+              "count": 5779
+            },
+            {
+              "token_id": 370,
+              "token": "ëıĦ",
+              "count": 5460
+            },
+            {
+              "token_id": 285,
+              "token": "ëĬĶ",
+              "count": 5208
+            }
+          ],
+          "roundtrip_fail_examples": [],
+          "file_source": "holdout",
+          "files": [
+            "C:\\Users\\dbstj\\dataset\\processed\\ko_aihub_test.jsonl"
+          ]
+        },
+        {
+          "label": "en",
+          "docs": 5000,
+          "chars": 26605401,
+          "tokens": 6139623,
+          "avg_chars_per_doc": 5321.0802,
+          "avg_tokens_per_doc": 1227.9246,
+          "avg_token_length_in_chars": 4.333393271867019,
+          "chars_per_token": 4.333393271867019,
+          "tokens_per_char": 0.23076603882046356,
+          "unk_count": 0,
+          "unk_ratio": 0.0,
+          "roundtrip_success": 5000,
+          "roundtrip_success_ratio": 1.0,
+          "roundtrip_fail": 0,
+          "roundtrip_fail_ratio": 0.0,
+          "used_vocab": 25240,
+          "used_vocab_ratio": 0.394375,
+          "top_used_tokens": [
+            {
+              "token_id": 286,
+              "token": "Ġthe",
+              "count": 272826
+            },
+            {
+              "token_id": 23,
+              "token": ",",
+              "count": 242148
+            },
+            {
+              "token_id": 25,
+              "token": ".",
+              "count": 212217
+            },
+            {
+              "token_id": 319,
+              "token": "Ġof",
+              "count": 144528
+            },
+            {
+              "token_id": 347,
+              "token": "Ġand",
+              "count": 127106
+            },
+            {
+              "token_id": 333,
+              "token": "Ġin",
+              "count": 104996
+            },
+            {
+              "token_id": 371,
+              "token": "Ġto",
+              "count": 93768
+            },
+            {
+              "token_id": 210,
+              "token": "Ċ",
+              "count": 88287
+            },
+            {
+              "token_id": 277,
+              "token": "Ġa",
+              "count": 85230
+            },
+            {
+              "token_id": 471,
+              "token": "Ġwas",
+              "count": 53829
+            },
+            {
+              "token_id": 24,
+              "token": "-",
+              "count": 51131
+            },
+            {
+              "token_id": 450,
+              "token": "Ġ\"",
+              "count": 47792
+            },
+            {
+              "token_id": 524,
+              "token": "Ġis",
+              "count": 36068
+            },
+            {
+              "token_id": 493,
+              "token": "Ġfor",
+              "count": 36018
+            },
+            {
+              "token_id": 536,
+              "token": "Ġas",
+              "count": 35158
+            },
+            {
+              "token_id": 573,
+              "token": "Ġwith",
+              "count": 31943
+            },
+            {
+              "token_id": 538,
+              "token": "Ġon",
+              "count": 31829
+            },
+            {
+              "token_id": 13,
+              "token": "\"",
+              "count": 30452
+            },
+            {
+              "token_id": 607,
+              "token": "Ġby",
+              "count": 30202
+            },
+            {
+              "token_id": 531,
+              "token": "Ġ(",
+              "count": 29443
+            }
+          ],
+          "roundtrip_fail_examples": [],
+          "file_source": "holdout",
+          "files": [
+            "C:\\Users\\dbstj\\dataset\\processed\\enwiki_test.jsonl"
+          ]
+        },
+        {
+          "label": "code",
+          "docs": 2225,
+          "chars": 606929,
+          "tokens": 193372,
+          "avg_chars_per_doc": 272.7770786516854,
+          "avg_tokens_per_doc": 86.90876404494382,
+          "avg_token_length_in_chars": 3.1386601989946836,
+          "chars_per_token": 3.1386601989946836,
+          "tokens_per_char": 0.31860728355376,
+          "unk_count": 0,
+          "unk_ratio": 0.0,
+          "roundtrip_success": 2225,
+          "roundtrip_success_ratio": 1.0,
+          "roundtrip_fail": 0,
+          "roundtrip_fail_ratio": 0.0,
+          "used_vocab": 6827,
+          "used_vocab_ratio": 0.106671875,
+          "top_used_tokens": [
+            {
+              "token_id": 210,
+              "token": "Ċ",
+              "count": 12709
+            },
+            {
+              "token_id": 74,
+              "token": "_",
+              "count": 6761
+            },
+            {
+              "token_id": 25,
+              "token": ".",
+              "count": 5830
+            },
+            {
+              "token_id": 23,
+              "token": ",",
+              "count": 4249
+            },
+            {
+              "token_id": 5701,
+              "token": "ĠĠĠĠĠĠĠ",
+              "count": 4018
+            },
+            {
+              "token_id": 37,
+              "token": ":",
+              "count": 3600
+            },
+            {
+              "token_id": 19,
+              "token": "(",
+              "count": 3177
+            },
+            {
+              "token_id": 3702,
+              "token": "ĠĠĠ",
+              "count": 2266
+            },
+            {
+              "token_id": 41,
+              "token": ">",
+              "count": 2172
+            },
+            {
+              "token_id": 1989,
+              "token": "Ġ=",
+              "count": 2079
+            },
+            {
+              "token_id": 20,
+              "token": ")",
+              "count": 2049
+            },
+            {
+              "token_id": 286,
+              "token": "Ġthe",
+              "count": 1970
+            },
+            {
+              "token_id": 10378,
+              "token": "ĠĠĠĠĠĠĠĠĠĠĠ",
+              "count": 1943
+            },
+            {
+              "token_id": 2618,
+              "token": "Ġ:",
+              "count": 1183
+            },
+            {
+              "token_id": 40,
+              "token": "=",
+              "count": 1122
+            },
+            {
+              "token_id": 94,
+              "token": "s",
+              "count": 1066
+            },
+            {
+              "token_id": 14583,
+              "token": "code",
+              "count": 1019
+            },
+            {
+              "token_id": 371,
+              "token": "Ġto",
+              "count": 1000
+            },
+            {
+              "token_id": 18603,
+              "token": "ĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠ",
+              "count": 982
+            },
+            {
+              "token_id": 39,
+              "token": "<",
+              "count": 966
+            }
+          ],
+          "roundtrip_fail_examples": [],
+          "file_source": "holdout",
+          "files": [
+            "C:\\Users\\dbstj\\dataset\\processed\\code_test.txt"
+          ]
+        }
+      ]
+    },
+    "80k": {
+      "tokenizer_dir": "C:\\Users\\dbstj\\dataset\\tokenizer_bpe_80k",
+      "vocab_size": 80000,
+      "max_docs_per_group": 10000,
+      "results": [
+        {
+          "label": "ko",
+          "docs": 5000,
+          "chars": 4431633,
+          "tokens": 1743340,
+          "avg_chars_per_doc": 886.3266,
+          "avg_tokens_per_doc": 348.668,
+          "avg_token_length_in_chars": 2.5420359769178704,
+          "chars_per_token": 2.5420359769178704,
+          "tokens_per_char": 0.39338546310129924,
+          "unk_count": 0,
+          "unk_ratio": 0.0,
+          "roundtrip_success": 5000,
+          "roundtrip_success_ratio": 1.0,
+          "roundtrip_fail": 0,
+          "roundtrip_fail_ratio": 0.0,
+          "used_vocab": 47590,
+          "used_vocab_ratio": 0.594875,
+          "top_used_tokens": [
+            {
+              "token_id": 25,
+              "token": ".",
+              "count": 56585
+            },
+            {
+              "token_id": 23,
+              "token": ",",
+              "count": 26411
+            },
+            {
+              "token_id": 464,
+              "token": "Ġ'",
+              "count": 21387
+            },
+            {
+              "token_id": 18,
+              "token": "'",
+              "count": 20636
+            },
+            {
+              "token_id": 7,
+              "token": "<NAME>",
+              "count": 18743
+            },
+            {
+              "token_id": 232,
+              "token": "Ġ",
+              "count": 14617
+            },
+            {
+              "token_id": 19,
+              "token": "(",
+              "count": 13169
+            },
+            {
+              "token_id": 20,
+              "token": ")",
+              "count": 12144
+            },
+            {
+              "token_id": 410,
+              "token": "ìĿ¼",
+              "count": 9220
+            },
+            {
+              "token_id": 500,
+              "token": "..",
+              "count": 8931
+            },
+            {
+              "token_id": 322,
+              "token": "ê³ł",
+              "count": 8131
+            },
+            {
+              "token_id": 508,
+              "token": "ĠìŀĪëĭ¤",
+              "count": 6928
+            },
+            {
+              "token_id": 413,
+              "token": "ĠìĪĺ",
+              "count": 6380
+            },
+            {
+              "token_id": 287,
+              "token": "ìĹĲ",
+              "count": 5970
+            },
+            {
+              "token_id": 295,
+              "token": "ìĿĺ",
+              "count": 5806
+            },
+            {
+              "token_id": 281,
+              "token": "ìĿ´",
+              "count": 5592
+            },
+            {
+              "token_id": 519,
+              "token": "Ġëĵ±",
+              "count": 5183
+            },
+            {
+              "token_id": 323,
+              "token": "Ġ1",
+              "count": 5141
+            },
+            {
+              "token_id": 320,
+              "token": "ìĿĢ",
+              "count": 5106
+            },
+            {
+              "token_id": 297,
+              "token": "ìĿĦ",
+              "count": 5089
+            }
+          ],
+          "roundtrip_fail_examples": [],
+          "file_source": "holdout",
+          "files": [
+            "C:\\Users\\dbstj\\dataset\\processed\\ko_aihub_test.jsonl"
+          ]
+        },
+        {
+          "label": "en",
+          "docs": 5000,
+          "chars": 26605401,
+          "tokens": 6025024,
+          "avg_chars_per_doc": 5321.0802,
+          "avg_tokens_per_doc": 1205.0048,
+          "avg_token_length_in_chars": 4.415816600896528,
+          "chars_per_token": 4.415816600896528,
+          "tokens_per_char": 0.22645868032584812,
+          "unk_count": 0,
+          "unk_ratio": 0.0,
+          "roundtrip_success": 5000,
+          "roundtrip_success_ratio": 1.0,
+          "roundtrip_fail": 0,
+          "roundtrip_fail_ratio": 0.0,
+          "used_vocab": 30714,
+          "used_vocab_ratio": 0.383925,
+          "top_used_tokens": [
+            {
+              "token_id": 286,
+              "token": "Ġthe",
+              "count": 272826
+            },
+            {
+              "token_id": 23,
+              "token": ",",
+              "count": 242070
+            },
+            {
+              "token_id": 25,
+              "token": ".",
+              "count": 212191
+            },
+            {
+              "token_id": 319,
+              "token": "Ġof",
+              "count": 144528
+            },
+            {
+              "token_id": 347,
+              "token": "Ġand",
+              "count": 127106
+            },
+            {
+              "token_id": 333,
+              "token": "Ġin",
+              "count": 104801
+            },
+            {
+              "token_id": 371,
+              "token": "Ġto",
+              "count": 93704
+            },
+            {
+              "token_id": 210,
+              "token": "Ċ",
+              "count": 88287
+            },
+            {
+              "token_id": 277,
+              "token": "Ġa",
+              "count": 85086
+            },
+            {
+              "token_id": 471,
+              "token": "Ġwas",
+              "count": 53744
+            },
+            {
+              "token_id": 24,
+              "token": "-",
+              "count": 51078
+            },
+            {
+              "token_id": 450,
+              "token": "Ġ\"",
+              "count": 47768
+            },
+            {
+              "token_id": 524,
+              "token": "Ġis",
+              "count": 36061
+            },
+            {
+              "token_id": 493,
+              "token": "Ġfor",
+              "count": 35879
+            },
+            {
+              "token_id": 536,
+              "token": "Ġas",
+              "count": 35099
+            },
+            {
+              "token_id": 573,
+              "token": "Ġwith",
+              "count": 31915
+            },
+            {
+              "token_id": 538,
+              "token": "Ġon",
+              "count": 31829
+            },
+            {
+              "token_id": 13,
+              "token": "\"",
+              "count": 30361
+            },
+            {
+              "token_id": 607,
+              "token": "Ġby",
+              "count": 30187
+            },
+            {
+              "token_id": 531,
+              "token": "Ġ(",
+              "count": 29416
+            }
+          ],
+          "roundtrip_fail_examples": [],
+          "file_source": "holdout",
+          "files": [
+            "C:\\Users\\dbstj\\dataset\\processed\\enwiki_test.jsonl"
+          ]
+        },
+        {
+          "label": "code",
+          "docs": 2225,
+          "chars": 606929,
+          "tokens": 189573,
+          "avg_chars_per_doc": 272.7770786516854,
+          "avg_tokens_per_doc": 85.20134831460675,
+          "avg_token_length_in_chars": 3.201558238778729,
+          "chars_per_token": 3.201558238778729,
+          "tokens_per_char": 0.3123479023081777,
+          "unk_count": 0,
+          "unk_ratio": 0.0,
+          "roundtrip_success": 2225,
+          "roundtrip_success_ratio": 1.0,
+          "roundtrip_fail": 0,
+          "roundtrip_fail_ratio": 0.0,
+          "used_vocab": 7229,
+          "used_vocab_ratio": 0.0903625,
+          "top_used_tokens": [
+            {
+              "token_id": 210,
+              "token": "Ċ",
+              "count": 12709
+            },
+            {
+              "token_id": 74,
+              "token": "_",
+              "count": 6761
+            },
+            {
+              "token_id": 25,
+              "token": ".",
+              "count": 5817
+            },
+            {
+              "token_id": 23,
+              "token": ",",
+              "count": 4246
+            },
+            {
+              "token_id": 5701,
+              "token": "ĠĠĠĠĠĠĠ",
+              "count": 4018
+            },
+            {
+              "token_id": 37,
+              "token": ":",
+              "count": 3600
+            },
+            {
+              "token_id": 19,
+              "token": "(",
+              "count": 3172
+            },
+            {
+              "token_id": 3702,
+              "token": "ĠĠĠ",
+              "count": 2266
+            },
+            {
+              "token_id": 1989,
+              "token": "Ġ=",
+              "count": 2079
+            },
+            {
+              "token_id": 41,
+              "token": ">",
+              "count": 2074
+            },
+            {
+              "token_id": 20,
+              "token": ")",
+              "count": 2004
+            },
+            {
+              "token_id": 286,
+              "token": "Ġthe",
+              "count": 1970
+            },
+            {
+              "token_id": 10378,
+              "token": "ĠĠĠĠĠĠĠĠĠĠĠ",
+              "count": 1943
+            },
+            {
+              "token_id": 2618,
+              "token": "Ġ:",
+              "count": 1183
+            },
+            {
+              "token_id": 40,
+              "token": "=",
+              "count": 1122
+            },
+            {
+              "token_id": 14583,
+              "token": "code",
+              "count": 1019
+            },
+            {
+              "token_id": 94,
+              "token": "s",
+              "count": 1005
+            },
+            {
+              "token_id": 371,
+              "token": "Ġto",
+              "count": 1000
+            },
+            {
+              "token_id": 18603,
+              "token": "ĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠ",
+              "count": 982
+            },
+            {
+              "token_id": 39,
+              "token": "<",
+              "count": 963
+            }
+          ],
+          "roundtrip_fail_examples": [],
+          "file_source": "holdout",
+          "files": [
+            "C:\\Users\\dbstj\\dataset\\processed\\code_test.txt"
+          ]
+        }
+      ]
+    }
+  },
+  "summary_table": [
+    {
+      "model": "50k",
+      "tokenizer_dir": "C:\\Users\\dbstj\\dataset\\tokenizer_bpe_50k",
+      "vocab_size": 50000,
+      "domain": "ko",
+      "docs": 5000,
+      "avg_tokens_per_doc": 369.1776,
+      "chars_per_token": 2.4008135921572706,
+      "tokens_per_char": 0.41652546589485184,
+      "unk_ratio": 0.0,
+      "roundtrip_success_ratio": 1.0,
+      "used_vocab": 31494,
+      "used_vocab_ratio": 0.62988,
+      "file_source": "holdout",
+      "files": [
+        "C:\\Users\\dbstj\\dataset\\processed\\ko_aihub_test.jsonl"
+      ]
+    },
+    {
+      "model": "50k",
+      "tokenizer_dir": "C:\\Users\\dbstj\\dataset\\tokenizer_bpe_50k",
+      "vocab_size": 50000,
+      "domain": "en",
+      "docs": 5000,
+      "avg_tokens_per_doc": 1257.8254,
+      "chars_per_token": 4.230380623574623,
+      "tokens_per_char": 0.23638534897481905,
+      "unk_ratio": 0.0,
+      "roundtrip_success_ratio": 1.0,
+      "used_vocab": 20264,
+      "used_vocab_ratio": 0.40528,
+      "file_source": "holdout",
+      "files": [
+        "C:\\Users\\dbstj\\dataset\\processed\\enwiki_test.jsonl"
+      ]
+    },
+    {
+      "model": "50k",
+      "tokenizer_dir": "C:\\Users\\dbstj\\dataset\\tokenizer_bpe_50k",
+      "vocab_size": 50000,
+      "domain": "code",
+      "docs": 2225,
+      "avg_tokens_per_doc": 89.43146067415731,
+      "chars_per_token": 3.0501243812347663,
+      "tokens_per_char": 0.3278554822722262,
+      "unk_ratio": 0.0,
+      "roundtrip_success_ratio": 1.0,
+      "used_vocab": 6353,
+      "used_vocab_ratio": 0.12706,
+      "file_source": "holdout",
+      "files": [
+        "C:\\Users\\dbstj\\dataset\\processed\\code_test.txt"
+      ]
+    },
+    {
+      "model": "64k",
+      "tokenizer_dir": "C:\\Users\\dbstj\\dataset\\tokenizer_bpe_64k",
+      "vocab_size": 64000,
+      "domain": "ko",
+      "docs": 5000,
+      "avg_tokens_per_doc": 358.0472,
+      "chars_per_token": 2.475446254013437,
+      "tokens_per_char": 0.4039675668088942,
+      "unk_ratio": 0.0,
+      "roundtrip_success_ratio": 1.0,
+      "used_vocab": 39171,
+      "used_vocab_ratio": 0.612046875,
+      "file_source": "holdout",
+      "files": [
+        "C:\\Users\\dbstj\\dataset\\processed\\ko_aihub_test.jsonl"
+      ]
+    },
+    {
+      "model": "64k",
+      "tokenizer_dir": "C:\\Users\\dbstj\\dataset\\tokenizer_bpe_64k",
+      "vocab_size": 64000,
+      "domain": "en",
+      "docs": 5000,
+      "avg_tokens_per_doc": 1227.9246,
+      "chars_per_token": 4.333393271867019,
+      "tokens_per_char": 0.23076603882046356,
+      "unk_ratio": 0.0,
+      "roundtrip_success_ratio": 1.0,
+      "used_vocab": 25240,
+      "used_vocab_ratio": 0.394375,
+      "file_source": "holdout",
+      "files": [
+        "C:\\Users\\dbstj\\dataset\\processed\\enwiki_test.jsonl"
+      ]
+    },
+    {
+      "model": "64k",
+      "tokenizer_dir": "C:\\Users\\dbstj\\dataset\\tokenizer_bpe_64k",
+      "vocab_size": 64000,
+      "domain": "code",
+      "docs": 2225,
+      "avg_tokens_per_doc": 86.90876404494382,
+      "chars_per_token": 3.1386601989946836,
+      "tokens_per_char": 0.31860728355376,
+      "unk_ratio": 0.0,
+      "roundtrip_success_ratio": 1.0,
+      "used_vocab": 6827,
+      "used_vocab_ratio": 0.106671875,
+      "file_source": "holdout",
+      "files": [
+        "C:\\Users\\dbstj\\dataset\\processed\\code_test.txt"
+      ]
+    },
+    {
+      "model": "80k",
+      "tokenizer_dir": "C:\\Users\\dbstj\\dataset\\tokenizer_bpe_80k",
+      "vocab_size": 80000,
+      "domain": "ko",
+      "docs": 5000,
+      "avg_tokens_per_doc": 348.668,
+      "chars_per_token": 2.5420359769178704,
+      "tokens_per_char": 0.39338546310129924,
+      "unk_ratio": 0.0,
+      "roundtrip_success_ratio": 1.0,
+      "used_vocab": 47590,
+      "used_vocab_ratio": 0.594875,
+      "file_source": "holdout",
+      "files": [
+        "C:\\Users\\dbstj\\dataset\\processed\\ko_aihub_test.jsonl"
+      ]
+    },
+    {
+      "model": "80k",
+      "tokenizer_dir": "C:\\Users\\dbstj\\dataset\\tokenizer_bpe_80k",
+      "vocab_size": 80000,
+      "domain": "en",
+      "docs": 5000,
+      "avg_tokens_per_doc": 1205.0048,
+      "chars_per_token": 4.415816600896528,
+      "tokens_per_char": 0.22645868032584812,
+      "unk_ratio": 0.0,
+      "roundtrip_success_ratio": 1.0,
+      "used_vocab": 30714,
+      "used_vocab_ratio": 0.383925,
+      "file_source": "holdout",
+      "files": [
+        "C:\\Users\\dbstj\\dataset\\processed\\enwiki_test.jsonl"
+      ]
+    },
+    {
+      "model": "80k",
+      "tokenizer_dir": "C:\\Users\\dbstj\\dataset\\tokenizer_bpe_80k",
+      "vocab_size": 80000,
+      "domain": "code",
+      "docs": 2225,
+      "avg_tokens_per_doc": 85.20134831460675,
+      "chars_per_token": 3.201558238778729,
+      "tokens_per_char": 0.3123479023081777,
+      "unk_ratio": 0.0,
+      "roundtrip_success_ratio": 1.0,
+      "used_vocab": 7229,
+      "used_vocab_ratio": 0.0903625,
+      "file_source": "holdout",
+      "files": [
+        "C:\\Users\\dbstj\\dataset\\processed\\code_test.txt"
+      ]
+    }
+  ]
+}

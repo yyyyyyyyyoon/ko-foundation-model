@@ -1,0 +1,28 @@
+Tokenizer saved to: C:\Users\dbstj\dataset\tokenizer_bpe_50k
+Vocab size: 50000
+
+Input: 한국어 언어모델을 구축하기 위한 사전학습 데이터를 정제한다.
+Token count: 12
+Token ids: [49164, 6365, 30458, 3034, 1018, 1394, 5403, 14039, 6614, 31599, 643, 25]
+Tokens: ['íķľêµŃìĸ´', 'Ġìĸ¸ìĸ´', 'ëª¨ëį¸ìĿĦ', 'Ġêµ¬ì¶ķ', 'íķĺê¸°', 'ĠìľĦíķľ', 'ĠìĤ¬ìłĦ', 'íķĻìĬµ', 'Ġëį°ìĿ´íĦ°ë¥¼', 'Ġìłķìłľ', 'íķľëĭ¤', '.']
+Tokens escaped: ['\\xed\\u0137\\u013e\\xea\\xb5\\u0143\\xec\\u0138\\xb4', '\\u0120\\xec\\u0138\\xb8\\xec\\u0138\\xb4', '\\xeb\\xaa\\xa8\\xeb\\u012f\\xb8\\xec\\u013f\\u0126', '\\u0120\\xea\\xb5\\xac\\xec\\xb6\\u0137', '\\xed\\u0137\\u013a\\xea\\xb8\\xb0', '\\u0120\\xec\\u013e\\u0126\\xed\\u0137\\u013e', '\\u0120\\xec\\u0124\\xac\\xec\\u0142\\u0126', '\\xed\\u0137\\u013b\\xec\\u012c\\xb5', '\\u0120\\xeb\\u012f\\xb0\\xec\\u013f\\xb4\\xed\\u0126\\xb0\\xeb\\xa5\\xbc', '\\u0120\\xec\\u0142\\u0137\\xec\\u0142\\u013e', '\\xed\\u0137\\u013e\\xeb\\u012d\\xa4', '.']
+Decoded: 한국어 언어모델을 구축하기 위한 사전학습 데이터를 정제한다.
+Roundtrip equal: True
+
+Input: The model is trained on Korean, English, and code corpora.
+Token count: 14
+Token ids: [791, 5774, 524, 20271, 538, 14478, 23, 3523, 23, 347, 9251, 11763, 76, 25]
+Tokens: ['The', 'Ġmodel', 'Ġis', 'Ġtrained', 'Ġon', 'ĠKorean', ',', 'ĠEnglish', ',', 'Ġand', 'Ġcode', 'Ġcorpor', 'a', '.']
+Tokens escaped: ['The', '\\u0120model', '\\u0120is', '\\u0120trained', '\\u0120on', '\\u0120Korean', ',', '\\u0120English', ',', '\\u0120and', '\\u0120code', '\\u0120corpor', 'a', '.']
+Decoded: The model is trained on Korean, English, and code corpora.
+Roundtrip equal: True
+
+Input: def preprocess_text(text):
+    return text.strip()
+Token count: 16
+Token ids: [13361, 1550, 46256, 74, 2716, 19, 2716, 7816, 210, 3702, 3090, 5438, 25, 430, 19742, 10349]
+Tokens: ['def', 'Ġpre', 'process', '_', 'text', '(', 'text', '):', 'Ċ', 'ĠĠĠ', 'Ġreturn', 'Ġtext', '.', 'st', 'rip', '()']
+Tokens escaped: ['def', '\\u0120pre', 'process', '_', 'text', '(', 'text', '):', '\\u010a', '\\u0120\\u0120\\u0120', '\\u0120return', '\\u0120text', '.', 'st', 'rip', '()']
+Decoded: def preprocess_text(text):
+    return text.strip()
+Roundtrip equal: True

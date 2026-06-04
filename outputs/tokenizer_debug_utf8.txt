@@ -1,0 +1,26 @@
+Tokenizer saved to: C:\Users\dbstj\dataset\tokenizer_bpe_64k
+Vocab size: 64000
+
+Input: 한국어 언어모델을 구축하기 위한 사전학습 데이터를 정제한다.
+Token count: 12
+Token ids: [2630, 439, 16770, 25127, 45639, 1267, 3782, 10431, 7158, 27301, 668, 25]
+Tokens: ['íķľêµŃ', 'ìĸ´', 'Ġìĸ¸ìĸ´', 'ëª¨ëį¸ìĿĦ', 'Ġêµ¬ì¶ķíķĺê¸°', 'ĠìľĦíķľ', 'ĠìĤ¬ìłĦ', 'íķĻìĬµ', 'Ġëį°ìĿ´íĦ°ë¥¼', 'Ġìłķìłľ', 'íķľëĭ¤', '.']
+Decoded: 한국어 언어모델을 구축하기 위한 사전학습 데이터를 정제한다.
+Roundtrip equal: True
+
+Input: The model is trained on Korean, English, and code corpora.
+Token count: 14
+Token ids: [806, 5839, 528, 19866, 542, 14820, 23, 3564, 23, 348, 9154, 11581, 76, 25]
+Tokens: ['The', 'Ġmodel', 'Ġis', 'Ġtrained', 'Ġon', 'ĠKorean', ',', 'ĠEnglish', ',', 'Ġand', 'Ġcode', 'Ġcorpor', 'a', '.']
+Decoded: The model is trained on Korean, English, and code corpora.
+Roundtrip equal: True
+
+Input: def preprocess_text(text):
+    return text.strip()
+Token count: 16
+Token ids: [12876, 1479, 45716, 74, 8317, 19, 8317, 10073, 210, 3051, 3061, 7152, 25, 438, 19892, 15276]
+Tokens: ['def', 'Ġpre', 'process', '_', 'text', '(', 'text', '):', 'Ċ', 'ĠĠĠ', 'Ġreturn', 'Ġtext', '.', 'st', 'rip', '()']
+Decoded: def preprocess_text(text):
+    return text.strip()
+Roundtrip equal: True
+

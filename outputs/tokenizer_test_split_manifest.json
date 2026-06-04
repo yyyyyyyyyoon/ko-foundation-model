@@ -1,0 +1,67 @@
+{
+  "seed": 42,
+  "rules": {
+    "text_test_docs_per_source": 5000,
+    "code_test_blocks": 5000,
+    "min_text_chars": 50,
+    "min_code_chars": 30,
+    "train_reconstruction": "Replays the original tokenizer-train prefix consumption and samples only from the unused suffix."
+  },
+  "train_usage": {
+    "ko": {
+      "kowiki": {
+        "path": "C:\\Users\\dbstj\\dataset\\processed\\kowiki_train.jsonl",
+        "consumed_docs": 739813,
+        "consumed_bytes": 1329689147
+      },
+      "ko_aihub": {
+        "path": "C:\\Users\\dbstj\\dataset\\processed\\ko_aihub_train.jsonl",
+        "consumed_docs": 836059,
+        "consumed_bytes": 1891535944
+      }
+    },
+    "en": {
+      "enwiki": {
+        "path": "C:\\Users\\dbstj\\dataset\\processed\\enwiki_train.jsonl",
+        "consumed_docs": 151939,
+        "consumed_bytes": 1610611754
+      }
+    },
+    "code": {
+      "path": "C:\\Users\\dbstj\\dataset\\processed\\code_train.txt",
+      "source_bytes": 6536890,
+      "consumed_bytes": 6536892,
+      "fully_consumed": true
+    }
+  },
+  "outputs": {
+    "kowiki": {
+      "output_path": "C:\\Users\\dbstj\\dataset\\processed\\kowiki_test.jsonl",
+      "sampled_docs": 0,
+      "eligible_unused_docs": 0,
+      "consumed_docs": 739813,
+      "consumed_bytes": 1329689147
+    },
+    "ko_aihub": {
+      "output_path": "C:\\Users\\dbstj\\dataset\\processed\\ko_aihub_test.jsonl",
+      "sampled_docs": 5000,
+      "eligible_unused_docs": 3965411,
+      "consumed_docs": 836059,
+      "consumed_bytes": 1891535944
+    },
+    "enwiki": {
+      "output_path": "C:\\Users\\dbstj\\dataset\\processed\\enwiki_test.jsonl",
+      "sampled_docs": 5000,
+      "eligible_unused_docs": 690705,
+      "consumed_docs": 151939,
+      "consumed_bytes": 1610611754
+    },
+    "code": {
+      "output_path": "C:\\Users\\dbstj\\dataset\\processed\\code_test.txt",
+      "sampled_blocks": 0,
+      "eligible_unused_blocks": 0,
+      "consumed_bytes": 6536892,
+      "fully_consumed_by_train": true
+    }
+  }
+}
