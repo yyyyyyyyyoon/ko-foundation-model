@@ -6,11 +6,12 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import torch
-from torch.utils.data import Dataset, DataLoader
 from torch.optim import AdamW
 from transformers import AutoTokenizer, get_cosine_schedule_with_warmup
 
 from base_model import KLLMConfig, KLLMForCausalLM
+from torch.utils.data import Dataset, DataLoader, Subset
+import shutil
 
 # Pahts
 DATA_ROOT = Path("/home/aiselab/workspace/ko-llm/dataset")
@@ -42,10 +43,11 @@ WARMUP_RATIO = 0.03
 LOG_STEPS = 10
 EVAL_STEPS = 2000
 SAVE_STEPS = 2000
+KEEP_LAST_N_CHECKPOINTS = 1
 MAIN_EVAL_DOCS = 256
 SMALL_TEST_EVAL_DOCS = 64
 
-RESUME_CHECKPOINT: Optional[str] = None # checkpoint 이어서 학습할 경우
+RESUME_CHECKPOINT: Optional[str] = "/home/aiselab/workspace/ko-llm/outputs/base_model_v2/checkpoints/step_30000" # checkpoint 이어서 학습할 경우
 
 SEED = 42
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -225,6 +227,16 @@ def load_resume_checkpoint_if_needed(model):
 
     print(f"[RESUME] Loaded model checkpoint from {ckpt_path}")
 
+def get_resume_steps():
+    if RESUME_CHECKPOINT is None:
+        return 0, 0
+
+    ckpt_name = Path(RESUME_CHECKPOINT).name  # step_30000
+    resume_optimizer_step = int(ckpt_name.split("_")[-1])
+    resume_global_step = resume_optimizer_step * GRAD_ACCUM_STEPS
+
+    return resume_global_step, resume_optimizer_step
+
 # Eval / Save
 @torch.no_grad()
 def evaluate(model, dataloader):
@@ -305,6 +317,32 @@ def save_checkpoint(model, optimizer, scheduler, step: int):
         json.dump(config_to_save, f, ensure_ascii=False, indent=2)
 
     print(f"[SAVE] {save_dir}")
+    cleanup_old_checkpoints(KEEP_LAST_N_CHECKPOINTS)
+
+def cleanup_old_checkpoints(keep_last_n: int = 1):
+    checkpoint_items = []
+
+    for ckpt_dir in CHECKPOINT_DIR.glob("step_*"):
+        if not ckpt_dir.is_dir():
+            continue
+
+        try:
+            step = int(ckpt_dir.name.split("_")[-1])
+        except ValueError:
+            continue
+
+        checkpoint_items.append((step, ckpt_dir))
+
+    checkpoint_items.sort(key=lambda x: x[0])
+
+    if len(checkpoint_items) <= keep_last_n:
+        return
+
+    to_delete = checkpoint_items[:-keep_last_n]
+
+    for step, ckpt_dir in to_delete:
+        print(f"[CLEANUP] Removing old checkpoint: {ckpt_dir}")
+        shutil.rmtree(ckpt_dir)
 
 # Train
 def main(use_small_test_model: bool = False):
@@ -345,20 +383,6 @@ def main(use_small_test_model: bool = False):
         block_size=MAX_LENGTH,
     )
 
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=BATCH_SIZE,
-        shuffle=False,
-        num_workers=0,
-    )
-
-    eval_loader = DataLoader(
-        eval_dataset,
-        batch_size=BATCH_SIZE,
-        shuffle=False,
-        num_workers=0,
-    )
-
     # 5. optimizer / scheduler 설정
     optimizer = AdamW(
         model.parameters(),
@@ -372,7 +396,7 @@ def main(use_small_test_model: bool = False):
     else:
         total_update_steps = max(
             1,
-            (len(train_loader) * NUM_EPOCHS) // GRAD_ACCUM_STEPS,
+            (len(train_dataset) * NUM_EPOCHS) // GRAD_ACCUM_STEPS,
         )
 
     warmup_steps = int(total_update_steps * WARMUP_RATIO)
@@ -386,27 +410,75 @@ def main(use_small_test_model: bool = False):
         num_training_steps=total_update_steps,
     )
 
-    scaler = torch.amp.GradScaler("cuda", enabled=USE_AMP)
+    resume_global_step, resume_optimizer_step = get_resume_steps()
 
-    global_step = 0
-    optimizer_step = 0
+    if resume_global_step > 0:
+        print(f"[RESUME] Skipping first {resume_global_step} blocks.")
+        train_dataset_for_loader = Subset(
+            train_dataset,
+            range(resume_global_step, len(train_dataset))
+        )
+    else:
+        train_dataset_for_loader = train_dataset
+
+    train_loader = DataLoader(
+        train_dataset_for_loader,
+        batch_size=BATCH_SIZE,
+        shuffle=False,
+        num_workers=0,
+    )
+
+    eval_loader = DataLoader(
+        eval_dataset,
+        batch_size=BATCH_SIZE,
+        shuffle=False,
+        num_workers=0,
+    )
+
+    global_step = resume_global_step
+    optimizer_step = resume_optimizer_step
     running_loss = 0.0
     running_count = 0
 
-    # 6. 로그 파일 생성
-    with open(LOG_PATH, "w", newline="", encoding="utf-8") as log_file:
-        writer = csv.writer(log_file)
-        writer.writerow(
-            [
-                "global_step",
-                "optimizer_step",
-                "epoch",
-                "train_loss",
-                "eval_loss",
-                "perplexity",
-                "learning_rate",
-            ]
+    if RESUME_CHECKPOINT is not None:
+        ckpt_dir = Path(RESUME_CHECKPOINT)
+
+        optimizer_path = ckpt_dir / "optimizer.pt"
+        scheduler_path = ckpt_dir / "scheduler.pt"
+
+        if optimizer_path.exists():
+            optimizer.load_state_dict(torch.load(optimizer_path, map_location=DEVICE))
+            print(f"[RESUME] Loaded optimizer state from {optimizer_path}")
+
+        if scheduler_path.exists():
+            scheduler.load_state_dict(torch.load(scheduler_path, map_location=DEVICE))
+            print(f"[RESUME] Loaded scheduler state from {scheduler_path}")
+
+        print(
+            f"[RESUME] resume_global_step={resume_global_step}, "
+            f"resume_optimizer_step={resume_optimizer_step}"
         )
+
+    scaler = torch.amp.GradScaler("cuda", enabled=USE_AMP)
+
+    # 6. 로그 파일 생성
+    log_mode = "a" if RESUME_CHECKPOINT is not None and LOG_PATH.exists() else "w"
+
+    with open(LOG_PATH, log_mode, newline="", encoding="utf-8") as log_file:
+        writer = csv.writer(log_file)
+
+        if log_mode == "w":
+            writer.writerow(
+                [
+                    "global_step",
+                    "optimizer_step",
+                    "epoch",
+                    "train_loss",
+                    "eval_loss",
+                    "perplexity",
+                    "learning_rate",
+                ]
+            )
 
         model.train()
 
