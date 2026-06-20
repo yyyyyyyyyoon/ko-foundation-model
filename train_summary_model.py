@@ -2,32 +2,35 @@ import csv
 import json
 import math
 import random
-import argparse
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List
 
 import torch
-from torch.utils.data import Dataset, DataLoader, random_split
+from torch.utils.data import Dataset, DataLoader
 from torch.optim import AdamW
 from transformers import AutoTokenizer, get_cosine_schedule_with_warmup
 
 from base_model import KLLMConfig, KLLMForCausalLM
 
-
-# Defaults
+# Train Config
 DATA_ROOT = Path("/home/aiselab/workspace/ko-llm/dataset")
 TOKENIZER_DIR = DATA_ROOT / "tokenizer_bpe_64k"
 
-DEFAULT_SFT_DIR = DATA_ROOT / "sft" / "summary"
-DEFAULT_TRAIN_JSONL = DEFAULT_SFT_DIR / "train.jsonl"
-DEFAULT_VALID_JSONL = DEFAULT_SFT_DIR / "valid.jsonl"
-DEFAULT_TEST_JSONL = DEFAULT_SFT_DIR / "test.jsonl"
-DEFAULT_OUTPUT_DIR = Path("/home/aiselab/workspace/ko-llm/outputs/summary_model")
+SFT_DIR = DATA_ROOT / "sft" / "summary"
+TRAIN_JSONL = SFT_DIR / "train.jsonl"
+VALID_JSONL = SFT_DIR / "valid.jsonl"
+
+BASE_CHECKPOINT_DIR = Path(
+    "/home/aiselab/workspace/ko-llm/outputs/base_model_v2/checkpoints/step_144000"
+)
+
+OUTPUT_DIR = Path("/home/aiselab/workspace/ko-llm/outputs/summary_model")
 
 MAX_LENGTH = 4096
 BATCH_SIZE = 1
 GRAD_ACCUM_STEPS = 8
 NUM_EPOCHS = 1
+MAX_TRAIN_STEPS = None
 
 LEARNING_RATE = 2e-5
 WEIGHT_DECAY = 0.01
@@ -36,12 +39,22 @@ WARMUP_RATIO = 0.03
 LOG_STEPS = 10
 EVAL_STEPS = 500
 SAVE_STEPS = 500
-EVAL_RATIO = 0.02
 KEEP_LAST_N_CHECKPOINTS = 2
 
 SEED = 42
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 USE_AMP = torch.cuda.is_available()
+
+# Model Config
+HIDDEN_SIZE = 2048
+INTERMEDIATE_SIZE = 5632
+NUM_HIDDEN_LAYERS = 24
+NUM_ATTENTION_HEADS = 16
+NUM_KEY_VALUE_HEADS = 4
+MAX_POSITION_EMBEDDINGS = 4096
+RMS_NORM_EPS = 1e-6
+ROPE_THETA = 10000.0
+TIE_WORD_EMBEDDINGS = True
 
 # Tokenizer / Model
 def load_tokenizer(tokenizer_dir: Path):
@@ -58,18 +71,17 @@ def load_tokenizer(tokenizer_dir: Path):
 def build_model(vocab_size: int):
     config = KLLMConfig(
         vocab_size=vocab_size,
-        hidden_size=2048,
-        intermediate_size=5632,
-        num_hidden_layers=24,
-        num_attention_heads=16,
-        num_key_value_heads=4,
-        max_position_embeddings=4096,
-        rms_norm_eps=1e-6,
-        rope_theta=10000.0,
-        tie_word_embeddings=True,
+        hidden_size=HIDDEN_SIZE,
+        intermediate_size=INTERMEDIATE_SIZE,
+        num_hidden_layers=NUM_HIDDEN_LAYERS,
+        num_attention_heads=NUM_ATTENTION_HEADS,
+        num_key_value_heads=NUM_KEY_VALUE_HEADS,
+        max_position_embeddings=MAX_POSITION_EMBEDDINGS,
+        rms_norm_eps=RMS_NORM_EPS,
+        rope_theta=ROPE_THETA,
+        tie_word_embeddings=TIE_WORD_EMBEDDINGS,
     )
     return KLLMForCausalLM(config)
-
 
 def load_base_checkpoint(model, checkpoint_dir: Path):
     ckpt_path = checkpoint_dir / "pytorch_model.pt"
@@ -172,7 +184,6 @@ class SummarySFTDataset(Dataset):
         prompt_ids = truncate_prompt_keep_suffix(prompt_ids, max_prompt_len)
 
         input_ids = prompt_ids + response_ids
-
         labels = [-100] * len(prompt_ids) + response_ids.copy()
 
         return {
@@ -322,73 +333,16 @@ def save_checkpoint(
 
     cleanup_old_checkpoints(checkpoint_dir, KEEP_LAST_N_CHECKPOINTS)
 
+
 # Train
 def main():
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument(
-        "--train-jsonl",
-        type=str,
-        default=str(DEFAULT_TRAIN_JSONL),
-    )
-    parser.add_argument(
-        "--base-checkpoint",
-        type=str,
-        required=True,
-        help="Base model checkpoint dir, e.g. outputs/base_model_v2/checkpoints/step_163766",
-    )
-    parser.add_argument(
-        "--output-dir",
-        type=str,
-        default=str(DEFAULT_OUTPUT_DIR),
-    )
-    parser.add_argument(
-        "--max-length",
-        type=int,
-        default=MAX_LENGTH,
-    )
-    parser.add_argument(
-        "--epochs",
-        type=int,
-        default=NUM_EPOCHS,
-    )
-    parser.add_argument(
-        "--lr",
-        type=float,
-        default=LEARNING_RATE,
-    )
-    parser.add_argument(
-        "--eval-ratio",
-        type=float,
-        default=EVAL_RATIO,
-    )
-    parser.add_argument(
-        "--max-train-steps",
-        type=int,
-        default=None,
-    )
-    parser.add_argument(
-        "--valid-jsonl",
-        type=str,
-        default=str(DEFAULT_VALID_JSONL),
-    )
-
-    parser.add_argument(
-        "--test-jsonl",
-        type=str,
-        default=str(DEFAULT_TEST_JSONL),
-    )
-
-    args = parser.parse_args()
-
     torch.manual_seed(SEED)
     random.seed(SEED)
 
-    train_jsonl = Path(args.train_jsonl)
-    valid_jsonl = Path(args.valid_jsonl)
-    test_jsonl = Path(args.test_jsonl)
-    base_checkpoint = Path(args.base_checkpoint)
-    output_dir = Path(args.output_dir)
+    train_jsonl = TRAIN_JSONL
+    valid_jsonl = VALID_JSONL
+    base_checkpoint = BASE_CHECKPOINT_DIR
+    output_dir = OUTPUT_DIR
     log_dir = output_dir / "logs"
     checkpoint_dir = output_dir / "checkpoints"
 
@@ -402,7 +356,6 @@ def main():
     print(f"Use AMP: {USE_AMP}")
     print(f"Train jsonl: {train_jsonl}")
     print(f"Valid jsonl: {valid_jsonl}")
-    print(f"Test jsonl: {test_jsonl}")
     print(f"Base checkpoint: {base_checkpoint}")
     print(f"Output dir: {output_dir}")
 
@@ -422,18 +375,17 @@ def main():
     train_dataset = SummarySFTDataset(
         jsonl_path=train_jsonl,
         tokenizer=tokenizer,
-        max_length=args.max_length,
+        max_length=MAX_LENGTH,
     )
 
     eval_dataset = SummarySFTDataset(
         jsonl_path=valid_jsonl,
         tokenizer=tokenizer,
-        max_length=args.max_length,
+        max_length=MAX_LENGTH,
     )
 
     print(f"[SPLIT] train samples: {len(train_dataset)}")
     print(f"[SPLIT] valid samples: {len(eval_dataset)}")
-    print(f"[SPLIT] test jsonl is reserved for final evaluation: {test_jsonl}")
 
     train_loader = DataLoader(
         train_dataset,
@@ -453,18 +405,18 @@ def main():
 
     optimizer = AdamW(
         model.parameters(),
-        lr=args.lr,
+        lr=LEARNING_RATE,
         weight_decay=WEIGHT_DECAY,
         betas=(0.9, 0.95),
     )
 
     total_update_steps = max(
         1,
-        (len(train_loader) * args.epochs) // GRAD_ACCUM_STEPS,
+        (len(train_loader) * NUM_EPOCHS) // GRAD_ACCUM_STEPS,
     )
 
-    if args.max_train_steps is not None:
-        total_update_steps = min(total_update_steps, args.max_train_steps)
+    if MAX_TRAIN_STEPS is not None:
+        total_update_steps = min(total_update_steps, MAX_TRAIN_STEPS)
 
     warmup_steps = int(total_update_steps * WARMUP_RATIO)
 
@@ -483,23 +435,35 @@ def main():
         "task": "summary_sft",
         "train_jsonl": str(train_jsonl),
         "valid_jsonl": str(valid_jsonl),
-        "test_jsonl": str(test_jsonl),
         "tokenizer_dir": str(TOKENIZER_DIR),
         "base_checkpoint": str(base_checkpoint),
         "output_dir": str(output_dir),
-        "max_length": args.max_length,
+        "max_length": MAX_LENGTH,
         "batch_size": BATCH_SIZE,
         "grad_accum_steps": GRAD_ACCUM_STEPS,
-        "epochs": args.epochs,
-        "learning_rate": args.lr,
+        "epochs": NUM_EPOCHS,
+        "learning_rate": LEARNING_RATE,
         "weight_decay": WEIGHT_DECAY,
         "warmup_ratio": WARMUP_RATIO,
         "total_update_steps": total_update_steps,
-        "split": "predefined_train_valid_test",
+        "max_train_steps": MAX_TRAIN_STEPS,
+        "split": "predefined_train_valid",
         "log_steps": LOG_STEPS,
         "eval_steps": EVAL_STEPS,
         "save_steps": SAVE_STEPS,
+        "keep_last_n_checkpoints": KEEP_LAST_N_CHECKPOINTS,
         "loss_masking": "prompt=-100, response=labels",
+        "model_config": {
+            "hidden_size": HIDDEN_SIZE,
+            "intermediate_size": INTERMEDIATE_SIZE,
+            "num_hidden_layers": NUM_HIDDEN_LAYERS,
+            "num_attention_heads": NUM_ATTENTION_HEADS,
+            "num_key_value_heads": NUM_KEY_VALUE_HEADS,
+            "max_position_embeddings": MAX_POSITION_EMBEDDINGS,
+            "rms_norm_eps": RMS_NORM_EPS,
+            "rope_theta": ROPE_THETA,
+            "tie_word_embeddings": TIE_WORD_EMBEDDINGS,
+        },
     }
 
     with open(output_dir / "training_config.json", "w", encoding="utf-8") as f:
@@ -531,8 +495,8 @@ def main():
     optimizer.zero_grad(set_to_none=True)
 
     try:
-        for epoch in range(args.epochs):
-            print(f"[EPOCH] {epoch + 1}/{args.epochs}")
+        for epoch in range(NUM_EPOCHS):
+            print(f"[EPOCH] {epoch + 1}/{NUM_EPOCHS}")
 
             for batch in train_loader:
                 global_step += 1

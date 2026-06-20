@@ -12,22 +12,19 @@ from transformers import AutoTokenizer, get_cosine_schedule_with_warmup
 from base_model import KLLMConfig, KLLMForCausalLM
 from torch.utils.data import Dataset, DataLoader, Subset
 import shutil
+from project_paths import PACKED_DATA_DIR, TOKENIZER_DIR, OUTPUT_ROOT
 
-# Pahts
-DATA_ROOT = Path("/home/aiselab/workspace/ko-llm/dataset")
+# Paths
+RUN_NAME = "base_model_v2"
 
-TOKENIZER_DIR = DATA_ROOT / "tokenizer_bpe_64k"
-PACKED_DATA_DIR = DATA_ROOT / "packed_corpus_4k"
-
-OUTPUT_DIR = Path("/home/aiselab/workspace/ko-llm/outputs/base_model_v2")
+OUTPUT_DIR = OUTPUT_ROOT / RUN_NAME
 LOG_DIR = OUTPUT_DIR / "logs"
 CHECKPOINT_DIR = OUTPUT_DIR / "checkpoints"
+LOG_PATH = LOG_DIR / "train_log.csv"
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
-
-LOG_PATH = LOG_DIR / "train_log.csv"
 
 # Training config
 MAX_LENGTH = 4096
@@ -44,10 +41,8 @@ LOG_STEPS = 10
 EVAL_STEPS = 2000
 SAVE_STEPS = 2000
 KEEP_LAST_N_CHECKPOINTS = 1
-MAIN_EVAL_DOCS = 256
-SMALL_TEST_EVAL_DOCS = 64
 
-RESUME_CHECKPOINT: Optional[str] = "/home/aiselab/workspace/ko-llm/outputs/base_model_v2/checkpoints/step_30000" # checkpoint 이어서 학습할 경우
+RESUME_CHECKPOINT: Optional[Path] = None # checkpoint 이어서 학습할 경우
 
 SEED = 42
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -217,7 +212,7 @@ def load_resume_checkpoint_if_needed(model):
         print("[RESUME] Training from scratch.")
         return
 
-    ckpt_path = Path(RESUME_CHECKPOINT) / "pytorch_model.pt"
+    ckpt_path = RESUME_CHECKPOINT / "pytorch_model.pt"
 
     if not ckpt_path.exists():
         raise FileNotFoundError(f"Resume checkpoint not found: {ckpt_path}")
@@ -231,7 +226,7 @@ def get_resume_steps():
     if RESUME_CHECKPOINT is None:
         return 0, 0
 
-    ckpt_name = Path(RESUME_CHECKPOINT).name  # step_30000
+    ckpt_name = RESUME_CHECKPOINT.name
     resume_optimizer_step = int(ckpt_name.split("_")[-1])
     resume_global_step = resume_optimizer_step * GRAD_ACCUM_STEPS
 
@@ -310,7 +305,7 @@ def save_checkpoint(model, optimizer, scheduler, step: int):
         "data_ratio": "ko:en:code = 6:3:1",
         "packed_data_dir": str(PACKED_DATA_DIR),
         "tokenizer_dir": str(TOKENIZER_DIR),
-        "resume_checkpoint": RESUME_CHECKPOINT,
+        "resume_checkpoint": str(RESUME_CHECKPOINT) if RESUME_CHECKPOINT is not None else None,
     }
 
     with open(save_dir / "training_config.json", "w", encoding="utf-8") as f:
@@ -441,7 +436,7 @@ def main(use_small_test_model: bool = False):
     running_count = 0
 
     if RESUME_CHECKPOINT is not None:
-        ckpt_dir = Path(RESUME_CHECKPOINT)
+        ckpt_dir = RESUME_CHECKPOINT
 
         optimizer_path = ckpt_dir / "optimizer.pt"
         scheduler_path = ckpt_dir / "scheduler.pt"

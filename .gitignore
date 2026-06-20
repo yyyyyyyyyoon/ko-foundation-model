@@ -1,4 +1,11 @@
-.idea/
-__pycache__/
-*.pyc
-outputs/base_model
+dataset/
+outputs/
+checkpoints/
+logs/
+
+*.pt
+*.bin
+*.safetensors
+*.ckpt
+
+.env

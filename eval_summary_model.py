@@ -1,8 +1,7 @@
-import argparse
 import json
 import math
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 from collections import Counter
 
 import torch
@@ -11,16 +10,23 @@ from transformers import AutoTokenizer
 
 from base_model import KLLMConfig, KLLMForCausalLM
 
-
-DATA_ROOT = Path('/home/aiselab/workspace/ko-llm/dataset')
-TOKENIZER_DIR = DATA_ROOT / 'tokenizer_bpe_64k'
-DEFAULT_SFT_DIR = DATA_ROOT / 'sft' / 'summary'
-DEFAULT_VALID_JSONL = DEFAULT_SFT_DIR / 'valid.jsonl'
-DEFAULT_TEST_JSONL = DEFAULT_SFT_DIR / 'test.jsonl'
-DEFAULT_OUTPUT_DIR = Path('/home/aiselab/workspace/ko-llm/outputs/summary_model_eval')
+# Eval Config
+CHECKPOINT_DIR = Path('/home/aiselab/workspace/ko-llm/outputs/summary_model_step144000/checkpoints/step_32503')
+TEST_JSONL = Path('/home/aiselab/workspace/ko-llm/dataset/test_sample500.jsonl')
+TOKENIZER_DIR = Path('/home/aiselab/workspace/ko-llm/dataset/tokenizer_bpe_64k')
+OUTPUT_DIR = Path('/home/aiselab/workspace/ko-llm/outputs/summary_model_eval/step_32503_sample500')
 
 MAX_LENGTH = 4096
 BATCH_SIZE = 1
+
+MAX_NEW_TOKENS = 128
+TEMPERATURE = 0.0
+TOP_P = 0.9
+
+# None means use all samples. This is equivalent to --max-rouge-samples -1.
+MAX_ROUGE_SAMPLES = None
+ROUGE_TOKENIZER = 'char'  # 'char' or 'whitespace'
+
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
@@ -167,7 +173,7 @@ def evaluate_loss_ppl(model, dataloader) -> Tuple[float, float, int, int]:
     else:
         eval_loss = total_loss / total_steps
         perplexity = math.exp(eval_loss) if eval_loss < 20 else float('inf')
-    print(f'[VALID EVAL] eval_loss={eval_loss:.6f}, ppl={perplexity:.4f}, valid_steps={total_steps}, skipped_steps={skipped_steps}')
+    print(f'[TEST EVAL] eval_loss={eval_loss:.6f}, ppl={perplexity:.4f}, test_steps={total_steps}, skipped_steps={skipped_steps}')
     return eval_loss, perplexity, total_steps, skipped_steps
 
 
@@ -341,73 +347,88 @@ def evaluate_rouge(model, tokenizer, test_jsonl: Path, output_dir: Path, max_len
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--checkpoint', type=str, required=True, help='Summary model checkpoint dir, e.g. outputs/summary_model/checkpoints/step_XXXXX')
-    parser.add_argument('--valid-jsonl', type=str, default=str(DEFAULT_VALID_JSONL))
-    parser.add_argument('--test-jsonl', type=str, default=str(DEFAULT_TEST_JSONL))
-    parser.add_argument('--tokenizer-dir', type=str, default=str(TOKENIZER_DIR))
-    parser.add_argument('--output-dir', type=str, default=str(DEFAULT_OUTPUT_DIR))
-    parser.add_argument('--max-length', type=int, default=MAX_LENGTH)
-    parser.add_argument('--batch-size', type=int, default=BATCH_SIZE)
-    parser.add_argument('--max-new-tokens', type=int, default=256)
-    parser.add_argument('--temperature', type=float, default=0.0, help='0.0 means greedy decoding.')
-    parser.add_argument('--top-p', type=float, default=0.9)
-    parser.add_argument('--max-rouge-samples', type=int, default=200, help='Use -1 for all test samples.')
-    parser.add_argument('--rouge-tokenizer', type=str, default='char', choices=['char', 'whitespace'])
-    args = parser.parse_args()
+    checkpoint_dir = CHECKPOINT_DIR
+    test_jsonl = TEST_JSONL
+    tokenizer_dir = TOKENIZER_DIR
+    output_dir = OUTPUT_DIR
+    max_rouge_samples = MAX_ROUGE_SAMPLES
 
-    checkpoint_dir = Path(args.checkpoint)
-    valid_jsonl = Path(args.valid_jsonl)
-    test_jsonl = Path(args.test_jsonl)
-    output_dir = Path(args.output_dir)
+    if ROUGE_TOKENIZER not in {'char', 'whitespace'}:
+        raise ValueError("ROUGE_TOKENIZER must be either 'char' or 'whitespace'.")
+
     output_dir.mkdir(parents=True, exist_ok=True)
-    max_rouge_samples = None if args.max_rouge_samples == -1 else args.max_rouge_samples
 
     print(f'Device: {DEVICE}')
     print(f'Checkpoint: {checkpoint_dir}')
-    print(f'Valid jsonl: {valid_jsonl}')
     print(f'Test jsonl: {test_jsonl}')
+    print(f'Tokenizer dir: {tokenizer_dir}')
     print(f'Output dir: {output_dir}')
-    print(f'ROUGE tokenizer: {args.rouge_tokenizer}')
+    print(f'Max length: {MAX_LENGTH}')
+    print(f'Batch size: {BATCH_SIZE}')
+    print(f'Max new tokens: {MAX_NEW_TOKENS}')
+    print(f'Temperature: {TEMPERATURE}')
+    print(f'Top-p: {TOP_P}')
+    print(f'Max ROUGE samples: {max_rouge_samples if max_rouge_samples is not None else "all"}')
+    print(f'ROUGE tokenizer: {ROUGE_TOKENIZER}')
 
-    tokenizer = load_tokenizer(Path(args.tokenizer_dir))
+    tokenizer = load_tokenizer(tokenizer_dir)
     model = build_model(len(tokenizer))
     load_checkpoint(model, checkpoint_dir)
     model = model.to(DEVICE)
     model.eval()
+
     print(f'Model parameters: {sum(p.numel() for p in model.parameters()) / 1e9:.3f}B')
 
-    valid_dataset = SummarySFTDataset(valid_jsonl, tokenizer, args.max_length)
-    valid_loader = DataLoader(valid_dataset, batch_size=args.batch_size, shuffle=False, num_workers=0, collate_fn=lambda b: collate_fn(b, tokenizer.pad_token_id))
-    eval_loss, eval_ppl, valid_steps, skipped_steps = evaluate_loss_ppl(model, valid_loader)
+    test_loss_dataset = SummarySFTDataset(
+        jsonl_path=test_jsonl,
+        tokenizer=tokenizer,
+        max_length=MAX_LENGTH,
+    )
+
+    test_loss_loader = DataLoader(
+        test_loss_dataset,
+        batch_size=BATCH_SIZE,
+        shuffle=False,
+        num_workers=0,
+        collate_fn=lambda b: collate_fn(b, tokenizer.pad_token_id),
+    )
+
+    eval_loss, eval_ppl, test_steps, skipped_steps = evaluate_loss_ppl(
+        model,
+        test_loss_loader,
+    )
 
     rouge_avg, prediction_path, n_rouge_samples = evaluate_rouge(
         model=model,
         tokenizer=tokenizer,
         test_jsonl=test_jsonl,
         output_dir=output_dir,
-        max_length=args.max_length,
-        max_new_tokens=args.max_new_tokens,
-        temperature=args.temperature,
-        top_p=args.top_p,
+        max_length=MAX_LENGTH,
+        max_new_tokens=MAX_NEW_TOKENS,
+        temperature=TEMPERATURE,
+        top_p=TOP_P,
         max_samples=max_rouge_samples,
-        rouge_tokenizer=args.rouge_tokenizer,
+        rouge_tokenizer=ROUGE_TOKENIZER,
     )
 
     results = {
         'checkpoint': str(checkpoint_dir),
-        'valid_jsonl': str(valid_jsonl),
         'test_jsonl': str(test_jsonl),
-        'eval_loss': eval_loss,
-        'perplexity': eval_ppl,
-        'valid_steps': valid_steps,
+        'test_eval_loss': eval_loss,
+        'test_perplexity': eval_ppl,
+        'test_steps': test_steps,
         'skipped_steps': skipped_steps,
-        'rouge_tokenizer': args.rouge_tokenizer,
+        'rouge_tokenizer': ROUGE_TOKENIZER,
         'rouge_samples': n_rouge_samples,
         'rouge': rouge_avg,
         'prediction_path': str(prediction_path),
-        'generation': {'max_new_tokens': args.max_new_tokens, 'temperature': args.temperature, 'top_p': args.top_p},
+        'generation': {
+            'max_new_tokens': MAX_NEW_TOKENS,
+            'temperature': TEMPERATURE,
+            'top_p': TOP_P,
+        },
     }
+
     results_path = output_dir / 'summary_eval_results.json'
     with open(results_path, 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
