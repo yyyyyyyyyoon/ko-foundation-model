@@ -98,13 +98,6 @@ TOKENIZER_DIR = PROJECT_ROOT / "tokenizer_bpe_64k"
 PACKED_DATA_DIR = DATA_ROOT / "packed_corpus_4k"
 ```
 
-If the dataset or output directory is located outside the project folder, override the paths with environment variables.
-
-```bash
-export KOLLM_DATA_ROOT=/path/to/dataset
-export KOLLM_OUTPUT_ROOT=/path/to/outputs
-```
-
 The training and evaluation scripts import common paths from `project_paths.py`.
 
 ```python
